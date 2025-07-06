@@ -94,18 +94,20 @@ steps:
             sudo chown -R www-data:www-data storage bootstrap/cache
             chmod -R 775 storage bootstrap/cache
 
-            # Generate APP_KEY jika belum
-            if grep -q "^APP_KEY=base64:" .env; then
+            # Generate APP_KEY jika belum ada atau kosong
+            APP_KEY_VALUE=$(grep '^APP_KEY=' .env | cut -d '=' -f2)
+            if [ -n "$APP_KEY_VALUE" ]; then
               echo "APP_KEY already exists, skipping key:generate"
             else
               php artisan key:generate
             fi
 
-            # Generate JWT_SECRET jika belum
-            if grep -q "^JWT_SECRET=" .env && [ "$(grep '^JWT_SECRET=' .env | cut -d '=' -f2)" != "" ]; then
-              echo "JWT_SECRET already exists, skipping jwt:secret"
+            # Generate JWT_SECRET jika belum ada atau kosong, pakai --force supaya gak prompt
+            JWT_VALUE=$(grep '^JWT_SECRET=' .env | cut -d '=' -f2)
+            if [ -n "$JWT_VALUE" ]; then
+              echo "JWT_SECRET already set, skipping jwt:secret"
             else
-              php artisan jwt:secret
+              php artisan jwt:secret --force
             fi
 
             php artisan optimize:clear
