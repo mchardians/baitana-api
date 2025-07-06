@@ -25,7 +25,8 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [
-        'http://34.101.212.234'
+        'http://34.101.212.234',
+        'http://localhost:3000',
     ],
 
     'allowed_origins_patterns' => [],
@@ -36,6 +37,6 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => true, // ⚠️ WAJIB true jika pakai cookie
+    'supports_credentials' => true,
 
 ];
