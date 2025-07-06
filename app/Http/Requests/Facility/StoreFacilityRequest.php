@@ -28,7 +28,7 @@ class StoreFacilityRequest extends FormRequest
             "description" => ["required"],
             "capacity" => ["required", "numeric", "min:0"],
             "price_per_hour" => ["required", "numeric", "min:0"],
-            "status" => ["required", "in:available,maintenance,unavailable"],
+            "status" => ["required", "in:reservable,unreservable,reserved"],
             "cover_image" => ["nullable", "image", "mimes:jpg,png,jpeg,webp", "max:2048"],
             "facility_previews.*" => ["nullable", "image", "mimes:jpg,png,jpeg,webp", "max:2048"]
         ];
