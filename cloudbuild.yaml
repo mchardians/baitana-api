@@ -86,26 +86,36 @@ steps:
               echo "L5_SWAGGER_GENERATE_ALWAYS=true" >> .env
               echo "L5_SWAGGER_UI_DARK_MODE=true" >> .env
             fi
-            
-            composer update
+
             composer install --no-dev --optimize-autoloader
             composer require fakerphp/faker
 
-            php artisan key:generate
-            php artisan jwt:secret
+            # Fix permission
+            sudo chown -R www-data:www-data storage bootstrap/cache
+            chmod -R 775 storage bootstrap/cache
+
+            # Generate APP_KEY jika belum
+            if grep -q "^APP_KEY=base64:" .env; then
+              echo "APP_KEY already exists, skipping key:generate"
+            else
+              php artisan key:generate
+            fi
+
+            # Generate JWT_SECRET jika belum
+            if grep -q "^JWT_SECRET=" .env && [ "$(grep '^JWT_SECRET=' .env | cut -d '=' -f2)" != "" ]; then
+              echo "JWT_SECRET already exists, skipping jwt:secret"
+            else
+              php artisan jwt:secret
+            fi
 
             php artisan optimize:clear
             php artisan migrate:fresh --seed --force
-
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
-
             php artisan storage:link
 
-            chmod -R 775 storage bootstrap/cache
-            sudo chown -R www-data:www-data storage bootstrap/cache
-
+            # Ulang reload service
             sudo systemctl reload php8.2-fpm
             sudo systemctl reload nginx
           '
