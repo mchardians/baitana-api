@@ -20,7 +20,7 @@ steps:
               echo "APP_ENV=production" >> .env
               echo "APP_KEY=" >> .env
               echo "APP_DEBUG=true" >> .env
-              echo "APP_URL=http://api.baitana.com" >> .env
+              echo "APP_URL=http://34.101.212.234" >> .env
               echo "APP_LOGO_URL=https://raw.githubusercontent.com/mchardians/baitana/dev/public/images/logo-baitana-temp-white.png" >> .env
 
               echo "NEXT_URL=http://baitana.com" >> .env
